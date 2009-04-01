@@ -3,8 +3,9 @@
 class Greeter
   def self.greet
     puts "Hey"
-   end
+  end
 end
 
 Greeter.greet
-sleep 5
+%w(fish chips potato).collect{|s| s.reverse.capitalize}.each{|o| puts o}
+sleep 6
