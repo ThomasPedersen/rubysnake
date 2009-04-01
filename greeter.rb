@@ -2,7 +2,7 @@
 
 class Greeter
   def self.greet
-    puts "Hey"
+    5.times {puts "Hey"}
   end
 end
 
