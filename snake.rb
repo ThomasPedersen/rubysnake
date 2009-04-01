@@ -19,7 +19,11 @@
 require 'rubygems'
 require 'gosu'
 
-
+class Venutzen
+  def self.greet
+    "Hey TyR!"
+  end
+end
 
 class Snake < Gosu::Window    
 
@@ -95,6 +99,6 @@ class Snake < Gosu::Window
    end
 end
 
-
-game = Snake.new
-game.show
+puts Venutzen.greet
+#game = Snake.new
+#game.show
