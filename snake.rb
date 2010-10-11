@@ -99,6 +99,5 @@ class Snake < Gosu::Window
    end
 end
 
-puts Venutzen.greet
-#game = Snake.new
-#game.show
+game = Snake.new
+game.show
