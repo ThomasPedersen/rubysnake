@@ -39,9 +39,7 @@ class Snake < Gosu::Window
 	  @snake = []
 	  @direction = :right
 	  @pos = {:x => 6, :y => height/32}
-	  @snake << @pos
 	  6.times { |n| @snake << {:x => -n, :y => height/32} }
-
     @paused = false
   end
 
@@ -67,7 +65,7 @@ class Snake < Gosu::Window
     @snake << { :x => @pos[:x], :y => @pos[:y] }
 
     if @pos == @apple_pos then
-      @snake << { :x => @pos[:x], :y => @pos[:y] }
+      @snake.unshift({ :x => @pos[:x], :y => @pos[:y] })
       while @snake.index(@apple_pos)
         @apple_pos = { :x => rand(width/16), :y => rand(height/16) }
       end
@@ -120,8 +118,6 @@ game.show
 
 
 # bugs:
-# - prints "dead" at the beginning of the game
-# - when unpaused the length of the snake continues moving forward but the head does not
 # - when crossing the border of the window (the walls) the snake does not die
 # - the game does not reset when the snake dies
 # - if, for instance, the up and left keys are pushed quickly, the snake can "run"
