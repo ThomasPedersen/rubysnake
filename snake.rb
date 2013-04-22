@@ -23,16 +23,23 @@ require 'yaml'
 
 
 class Snake < Gosu::Window
+  module Z
+    Text = 1
+  end
 
   settings = YAML.load_file "config.yaml"
   WIDTH = settings["screen_width"]
   HEIGHT = settings["screen_height"]
+
+  TEXT_COLOR = Gosu::Color::WHITE
 
   # Not used yet
   GRID_SIZE = settings["grid_size"]
 
   def initialize
 	  super(WIDTH, HEIGHT, false, 100)
+
+    @font = Gosu::Font.new(self, Gosu.default_font_name, 50)
 
 	  @apple_pos = { :x => 20, :y => height/32 }
 
@@ -60,7 +67,10 @@ class Snake < Gosu::Window
                 else 0
                 end
 
-    p "dead" if @snake.index({ :x => @pos[:x], :y => @pos[:y] })
+
+    if @snake.index({ :x => @pos[:x], :y => @pos[:y] })
+      you_died
+    end
 
     @snake << { :x => @pos[:x], :y => @pos[:y] }
 
@@ -74,11 +84,18 @@ class Snake < Gosu::Window
     @snake.shift
   end
 
+  def you_died
+    @text = "You died!"
+    @draw_text_now = true
+    p @text
+    @paused = true
+  end
+
   def button_down(key)
     case key
       when Gosu::KbSpace  then @paused = !@paused
       when Gosu::KbEscape then close
-      when Gosu::KbLeftMeta && Gosu::KbQ then close
+      when Gosu::KbLeftMeta && Gosu::KbQ  then close
       when Gosu::KbRightMeta && Gosu::KbQ then close
     end
 
@@ -91,26 +108,43 @@ class Snake < Gosu::Window
                  end
    end
 
-   def draw
-     snake_color = Gosu::Color.new(0xff00ff00)
-     apple_color = Gosu::Color.new(0xffff0000)
-     @snake.each do |part|
-       draw_quad(
-                   part[:x]*16, part[:y]*16, snake_color,
-                   part[:x]*16+16, part[:y]*16, snake_color,
-                   part[:x]*16, part[:y]*16+16, snake_color,
-                   part[:x]*16+16, part[:y]*16+16, snake_color
-                )
-     end
-
+  def draw
+    snake_color = Gosu::Color.new(0xff00ff00)
+    apple_color = Gosu::Color.new(0xffff0000)
+    @snake.each do |part|
      draw_quad(
-                 @apple_pos[:x]*16, @apple_pos[:y]*16, apple_color,
-                 @apple_pos[:x]*16+16, @apple_pos[:y]*16, apple_color,
-                 @apple_pos[:x]*16, @apple_pos[:y]*16+16, apple_color,
-                 @apple_pos[:x]*16+16, @apple_pos[:y]*16+16, apple_color
+                 part[:x]*16, part[:y]*16, snake_color,
+                 part[:x]*16+16, part[:y]*16, snake_color,
+                 part[:x]*16, part[:y]*16+16, snake_color,
+                 part[:x]*16+16, part[:y]*16+16, snake_color
               )
+    end
 
-   end
+    draw_quad(
+               @apple_pos[:x]*16, @apple_pos[:y]*16, apple_color,
+               @apple_pos[:x]*16+16, @apple_pos[:y]*16, apple_color,
+               @apple_pos[:x]*16, @apple_pos[:y]*16+16, apple_color,
+               @apple_pos[:x]*16+16, @apple_pos[:y]*16+16, apple_color
+            )
+
+    if @draw_text_now
+      draw_text(@text)
+      @draw_text_now = false unless @paused 
+    end
+  end
+
+  def draw_text(text)
+    text_width = @font.text_width(text)
+
+    @font.draw(
+      text,
+      (WIDTH / 2) - (text_width / 2),
+      (HEIGHT / 2) - 10,
+      Z::Text,
+      1.0, 1.0,
+      TEXT_COLOR
+    )
+  end
 end
 
 game = Snake.new
@@ -121,5 +155,5 @@ game.show
 # - when crossing the border of the window (the walls) the snake does not die
 # - the game does not reset when the snake dies
 # - if, for instance, the up and left keys are pushed quickly, the snake can "run"
-#   on top of itself (which puts "dead" every step)
-
+#   on top of itself
+# - add score
