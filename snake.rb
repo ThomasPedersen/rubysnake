@@ -34,7 +34,8 @@ class Snake < Gosu::Window
   TEXT_COLOR = Gosu::Color::WHITE
 
   # Not used yet
-  GRID_SIZE = settings["grid_size"]
+  GRID_WIDTH = settings["grid_width"]
+  GRID_HEIGHT = settings["grid_height"]
 
   def initialize
 	  super(WIDTH, HEIGHT, false, 100)
@@ -51,9 +52,7 @@ class Snake < Gosu::Window
   end
 
   def update
-    if @paused
-      return
-    end
+    return if @paused
 
     @pos[:x] += case @direction
                 when :left  then -1
@@ -154,6 +153,8 @@ game.show
 # bugs:
 # - when crossing the border of the window (the walls) the snake does not die
 # - the game does not reset when the snake dies
-# - if, for instance, the up and left keys are pushed quickly, the snake can "run"
-#   on top of itself
-# - add score
+# - if, for instance, the up and left keys are pushed quickly, the snake can
+#   "run" on top of itself
+# - show score
+# - when snake dies, display "Press Space to Replay" and reset the game
+# - change from hard-coded window sizes to grid size
