@@ -69,10 +69,11 @@ class Snake < Gosu::Window
   
   def button_down(key)
     @direction = case key
-                   when Gosu::KbRight then @direction == :left ? @direction : :right
-                   when Gosu::KbUp    then @direction == :down ? @direction : :up 
-                   when Gosu::KbLeft  then @direction == :right ? @direction : :left   
-                   when Gosu::KbDown  then @direction == :up ? @direction : :down 
+                   when Gosu::KbRight  then @direction == :left ? @direction : :right
+                   when Gosu::KbUp     then @direction == :down ? @direction : :up 
+                   when Gosu::KbLeft   then @direction == :right ? @direction : :left   
+                   when Gosu::KbDown   then @direction == :up ? @direction : :down 
+                   when Gosu::KbEscape then close
                    else @direction  
                  end
    end                                                        
