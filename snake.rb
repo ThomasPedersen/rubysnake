@@ -120,10 +120,10 @@ game.show
 
 
 # bugs:
-# - puts "dead" twice at the beginning of the game
+# - puts "dead" at the beginning of the game
 # - when unpaused the length of the snake continues moving forward but the head does not
 # - when crossing the border of the window (the walls) the snake does not die
 # - the game does not reset when the snake dies
 # - if, for instance, the up and left keys are pushed quickly, the snake can "run"
 #   on top of itself (which puts "dead" every step)
-# - use config.yml file instead of hardcoded magic numbers
+
