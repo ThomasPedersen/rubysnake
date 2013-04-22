@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 # RubySnake - The classic snake-game running on ruby
 # Version 0.0.1
 # Copyright (C) 2008 Thomas Wahl Pedersen
@@ -16,17 +18,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see http://www.gnu.org/licenses/.
 
-require 'rubygems'
 require 'gosu'
 
-class Venutzen
-  def self.greet
-    "Hey TyR!"
-  end
-end
-
 class Snake < Gosu::Window
-
   def initialize
 	  super(640, 480, false, 100)
 
@@ -57,6 +51,7 @@ class Snake < Gosu::Window
                   when :down then 1
                   else 0
                 end
+
     puts "dead" if @snake.index({ :x => @pos[:x], :y => @pos[:y] })
 
     @snake << { :x => @pos[:x], :y => @pos[:y] }
@@ -109,11 +104,11 @@ game = Snake.new
 game.show
 
 
-
 # bugs:
 # - puts "dead" twice at the beginning of the game
 # - when unpaused the length of the snake continues moving forward but the head does not
 # - when crossing the border of the window (the walls) the snake does not die
 # - the game does not reset when the snake dies
-# - if, for instance, the up and left keys are pushed quickly, the snake can "run" on top of itself (which outputs "dead" every step)
-
+# - if, for instance, the up and left keys are pushed quickly, the snake can "run"
+#   on top of itself (which puts "dead" every step)
+# - use config.yml file instead of hardcoded magic numbers
