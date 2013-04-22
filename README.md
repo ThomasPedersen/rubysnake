@@ -1,7 +1,7 @@
 
 # Ruby Snake!
 
-The classic snake-game running on Ruby.
+The classic snake-game running on Ruby using Gosu.
 
 ## Features
 
