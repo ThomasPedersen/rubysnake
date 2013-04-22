@@ -23,8 +23,16 @@ require 'yaml'
 
 
 class Snake < Gosu::Window
+
+  settings = YAML.load_file "config.yaml"
+  WIDTH = settings["screen_width"]
+  HEIGHT = settings["screen_height"]
+
+  # Not used yet
+  GRID_SIZE = settings["grid_size"]
+
   def initialize
-	  super(640, 480, false, 100)
+	  super(WIDTH, HEIGHT, false, 100)
 
 	  @apple_pos = { :x => 20, :y => height/32 }
 
@@ -69,13 +77,18 @@ class Snake < Gosu::Window
   end
 
   def button_down(key)
+    case key
+      when Gosu::KbSpace  then @paused = !@paused
+      when Gosu::KbEscape then close
+      when Gosu::KbLeftMeta && Gosu::KbQ then close
+      when Gosu::KbRightMeta && Gosu::KbQ then close
+    end
+
     @direction = case key
-                   when Gosu::KbRight  then @direction == :left ? @direction : :right
-                   when Gosu::KbUp     then @direction == :down ? @direction : :up
-                   when Gosu::KbLeft   then @direction == :right ? @direction : :left
-                   when Gosu::KbDown   then @direction == :up ? @direction : :down
-                   when Gosu::KbEscape then close
-                   when Gosu::KbSpace  then @paused = !@paused
+                   when Gosu::KbRight then @direction == :left ? @direction : :right
+                   when Gosu::KbUp    then @direction == :down ? @direction : :up
+                   when Gosu::KbLeft  then @direction == :right ? @direction : :left
+                   when Gosu::KbDown  then @direction == :up ? @direction : :down
                    else @direction
                  end
    end
