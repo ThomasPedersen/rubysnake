@@ -51,18 +51,18 @@ class Snake < Gosu::Window
     end
 
     @pos[:x] += case @direction
-                  when :left  then -1
-                  when :right then 1
-                  else 0
+                when :left  then -1
+                when :right then 1
+                else 0
                 end
 
     @pos[:y] += case @direction
-                  when :up   then -1
-                  when :down then 1
-                  else 0
+                when :up   then -1
+                when :down then 1
+                else 0
                 end
 
-    puts "dead" if @snake.index({ :x => @pos[:x], :y => @pos[:y] })
+    p "dead" if @snake.index({ :x => @pos[:x], :y => @pos[:y] })
 
     @snake << { :x => @pos[:x], :y => @pos[:y] }
 
@@ -120,7 +120,7 @@ game.show
 
 
 # bugs:
-# - puts "dead" at the beginning of the game
+# - prints "dead" at the beginning of the game
 # - when unpaused the length of the snake continues moving forward but the head does not
 # - when crossing the border of the window (the walls) the snake does not die
 # - the game does not reset when the snake dies
