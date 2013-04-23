@@ -44,19 +44,22 @@ class SnakeGame < Gosu::Window
   TEXT_COLOR = Gosu::Color::WHITE
 
   def initialize
-	  super(SCREEN_WIDTH, SCREEN_HEIGHT, false, 100)
+	  super(SCREEN_WIDTH, SCREEN_HEIGHT, false, 50)
 
     @map = Map.new(MAP_WIDTH, MAP_HEIGHT)
-
     @font = Gosu::Font.new(self, Gosu.default_font_name, 50)
-
-	  @apple_pos = {:x => @map.width / 3, :y => @map.height / 3}
-
-	  @snake = []
-	  @direction = :right
-	  @pos = {:x => @map.width / 3, :y => @map.height / 3}
-	  (1..6).each { |n| @snake << {:x => -n, :y => @map.height / 3} }
     @paused = false
+
+    reset_game
+  end
+
+  def reset_game
+    @apple_pos = {:x => @map.width / 3, :y => @map.height / 3}
+
+    @snake = []
+    @direction = :right
+    @pos = {:x => @map.width / 3, :y => @map.height / 3}
+    (1..6).each { |n| @snake << {:x => -n, :y => @map.height / 3} }
   end
 
   def update
@@ -77,8 +80,8 @@ class SnakeGame < Gosu::Window
     @snake.each do |loc|
       case
       when @snake.include?(@pos) then you_died
-      when loc[:x] == 0 || loc[:x] == @map.width then you_died
-      when loc[:y] == 0 || loc[:y] == @map.height then you_died
+      when loc[:x] == 0 || loc[:x] == @map.width - 1 then you_died
+      when loc[:y] == 0 || loc[:y] == @map.height - 1 then you_died
       end
     end
 
@@ -87,7 +90,7 @@ class SnakeGame < Gosu::Window
     if @pos == @apple_pos then
       @snake.unshift({:x => @pos[:x], :y => @pos[:y]})
       while @snake.index(@apple_pos)
-        @apple_pos = {:x => rand(@map.width/4), :y => rand(@map.height/4)}
+        @apple_pos = {:x => rand(@map.width + 1), :y => rand(@map.height + 1)}
       end
     end
 
@@ -99,6 +102,7 @@ class SnakeGame < Gosu::Window
     @draw_text_now = true
     p @text
     @paused = true
+    reset_game
   end
 
   def button_down(key)
@@ -116,32 +120,31 @@ class SnakeGame < Gosu::Window
                    when Gosu::KbDown  then @direction == :up ? @direction : :down
                    else @direction
                  end
-   end
+  end
 
   def draw
     snake_color = Gosu::Color.new(0xff00ff00)
     apple_color = Gosu::Color.new(0xffff0000)
     @snake.each do |part|
      draw_quad(
-                 part[:x]*16, part[:y]*16, snake_color,
-                 part[:x]*16+16, part[:y]*16, snake_color,
-                 part[:x]*16, part[:y]*16+16, snake_color,
-                 part[:x]*16+16, part[:y]*16+16, snake_color
+                 part[:x]*10, part[:y]*10, snake_color,
+                 part[:x]*10+10, part[:y]*10, snake_color,
+                 part[:x]*10, part[:y]*10+10, snake_color,
+                 part[:x]*10+10, part[:y]*10+10, snake_color
               )
     end
 
     draw_quad(
-               @apple_pos[:x]*16, @apple_pos[:y]*16, apple_color,
-               @apple_pos[:x]*16+16, @apple_pos[:y]*16, apple_color,
-               @apple_pos[:x]*16, @apple_pos[:y]*16+16, apple_color,
-               @apple_pos[:x]*16+16, @apple_pos[:y]*16+16, apple_color
+               @apple_pos[:x]*10, @apple_pos[:y]*10, apple_color,
+               @apple_pos[:x]*10+10, @apple_pos[:y]*10, apple_color,
+               @apple_pos[:x]*10, @apple_pos[:y]*10+10, apple_color,
+               @apple_pos[:x]*10+10, @apple_pos[:y]*10+10, apple_color
             )
 
     if @draw_text_now
       draw_text(@text)
       @draw_text_now = false unless @paused 
     end
-
   end
 
   def draw_text(text)
@@ -162,11 +165,10 @@ SnakeGame.new.show
 
 
 # bugs:
-# - when hitting the right or bottom walls the snake does not immediately die
-# - the game does not reset when the snake dies
 # - if, for instance, the up and left keys are pushed quickly, the snake can
 #   "run" on top of itself
 # - show score
-# - when snake dies, display "Press Space to Replay" and reset the game
-# - change from hard-coded window sizes to grid size
 # - when paused the snake still accepts direction input
+# - border does not have a displayed wall
+# - sometimes the apple does not reappear when the game resets
+
