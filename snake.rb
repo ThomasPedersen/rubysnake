@@ -21,7 +21,7 @@
 require 'gosu'
 require 'yaml'
 
-class Grid
+class Map
   attr_reader :width, :height
   def initialize(width, height)
     @width = width
@@ -35,27 +35,27 @@ class SnakeGame < Gosu::Window
   end
 
   settings = YAML.load_file "config.yaml"
-  WIDTH = settings["screen_width"]
-  HEIGHT = settings["screen_height"]
+
+  MAP_WIDTH = settings["map_width"]
+  MAP_HEIGHT = settings["map_height"]
+  SCREEN_WIDTH = MAP_WIDTH * 10
+  SCREEN_HEIGHT = MAP_HEIGHT * 10
 
   TEXT_COLOR = Gosu::Color::WHITE
 
-  GRID_WIDTH = settings["grid_width"]
-  GRID_HEIGHT = settings["grid_height"]
-
   def initialize
-	  super(WIDTH, HEIGHT, false, 100)
+	  super(SCREEN_WIDTH, SCREEN_HEIGHT, false, 100)
 
-    @grid = Grid.new(GRID_WIDTH, GRID_HEIGHT)
+    @map = Map.new(MAP_WIDTH, MAP_HEIGHT)
 
     @font = Gosu::Font.new(self, Gosu.default_font_name, 50)
 
-	  @apple_pos = {:x => @grid.width / 3, :y => @grid.height / 3}
+	  @apple_pos = {:x => @map.width / 3, :y => @map.height / 3}
 
 	  @snake = []
 	  @direction = :right
-	  @pos = {:x => @grid.width / 3, :y => @grid.height / 3}
-	  (1..6).each { |n| @snake << {:x => -n, :y => @grid.height / 3} }
+	  @pos = {:x => @map.width / 3, :y => @map.height / 3}
+	  (1..6).each { |n| @snake << {:x => -n, :y => @map.height / 3} }
     @paused = false
   end
 
@@ -77,8 +77,8 @@ class SnakeGame < Gosu::Window
     @snake.each do |loc|
       case
       when @snake.include?(@pos) then you_died
-      when loc[:x] == 0 || loc[:x] == @grid.width then you_died
-      when loc[:y] == 0 || loc[:y] == @grid.height then you_died
+      when loc[:x] == 0 || loc[:x] == @map.width then you_died
+      when loc[:y] == 0 || loc[:y] == @map.height then you_died
       end
     end
 
@@ -87,7 +87,7 @@ class SnakeGame < Gosu::Window
     if @pos == @apple_pos then
       @snake.unshift({:x => @pos[:x], :y => @pos[:y]})
       while @snake.index(@apple_pos)
-        @apple_pos = {:x => rand(@grid.width/4), :y => rand(@grid.height/4)}
+        @apple_pos = {:x => rand(@map.width/4), :y => rand(@map.height/4)}
       end
     end
 
@@ -149,8 +149,8 @@ class SnakeGame < Gosu::Window
 
     @font.draw(
       text,
-      (WIDTH / 2) - (text_width / 2),
-      (HEIGHT / 2) - 10,
+      (SCREEN_WIDTH / 2) - (text_width / 2),
+      (SCREEN_HEIGHT / 2) - 10,
       Z::Text,
       1.0, 1.0,
       TEXT_COLOR
