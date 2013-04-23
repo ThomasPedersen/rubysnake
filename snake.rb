@@ -21,8 +21,15 @@
 require 'gosu'
 require 'yaml'
 
+class Grid
+  attr_reader :width, :height
+  def initialize(width, height)
+    @width = width
+    @height = height
+  end
+end
 
-class Snake < Gosu::Window
+class SnakeGame < Gosu::Window
   module Z
     Text = 1
   end
@@ -33,21 +40,22 @@ class Snake < Gosu::Window
 
   TEXT_COLOR = Gosu::Color::WHITE
 
-  # Not used yet
   GRID_WIDTH = settings["grid_width"]
   GRID_HEIGHT = settings["grid_height"]
 
   def initialize
 	  super(WIDTH, HEIGHT, false, 100)
 
+    @grid = Grid.new(GRID_WIDTH, GRID_HEIGHT)
+
     @font = Gosu::Font.new(self, Gosu.default_font_name, 50)
 
-	  @apple_pos = { :x => 20, :y => height/32 }
+	  @apple_pos = {:x => @grid.width / 3, :y => @grid.height / 3}
 
 	  @snake = []
 	  @direction = :right
-	  @pos = {:x => 6, :y => height/32}
-	  6.times { |n| @snake << {:x => -n, :y => height/32} }
+	  @pos = {:x => @grid.width / 3, :y => @grid.height / 3}
+	  (1..6).each { |n| @snake << {:x => -n, :y => @grid.height / 3} }
     @paused = false
   end
 
@@ -66,17 +74,20 @@ class Snake < Gosu::Window
                 else 0
                 end
 
-
-    if @snake.index({ :x => @pos[:x], :y => @pos[:y] })
-      you_died
+    @snake.each do |loc|
+      case
+      when @snake.include?(@pos) then you_died
+      when loc[:x] == 0 || loc[:x] == @grid.width then you_died
+      when loc[:y] == 0 || loc[:y] == @grid.height then you_died
+      end
     end
 
-    @snake << { :x => @pos[:x], :y => @pos[:y] }
+    @snake << {:x => @pos[:x], :y => @pos[:y]}
 
     if @pos == @apple_pos then
-      @snake.unshift({ :x => @pos[:x], :y => @pos[:y] })
+      @snake.unshift({:x => @pos[:x], :y => @pos[:y]})
       while @snake.index(@apple_pos)
-        @apple_pos = { :x => rand(width/16), :y => rand(height/16) }
+        @apple_pos = {:x => rand(@grid.width/4), :y => rand(@grid.height/4)}
       end
     end
 
@@ -130,6 +141,7 @@ class Snake < Gosu::Window
       draw_text(@text)
       @draw_text_now = false unless @paused 
     end
+
   end
 
   def draw_text(text)
@@ -146,15 +158,15 @@ class Snake < Gosu::Window
   end
 end
 
-game = Snake.new
-game.show
+SnakeGame.new.show
 
 
 # bugs:
-# - when crossing the border of the window (the walls) the snake does not die
+# - when hitting the right or bottom walls the snake does not immediately die
 # - the game does not reset when the snake dies
 # - if, for instance, the up and left keys are pushed quickly, the snake can
 #   "run" on top of itself
 # - show score
 # - when snake dies, display "Press Space to Replay" and reset the game
 # - change from hard-coded window sizes to grid size
+# - when paused the snake still accepts direction input
