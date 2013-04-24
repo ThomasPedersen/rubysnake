@@ -109,9 +109,10 @@ class SnakeGame < Gosu::Window
     case key
       when Gosu::KbSpace  then @paused = !@paused
       when Gosu::KbEscape then close
-      when Gosu::KbLeftMeta && Gosu::KbQ  then close
-      when Gosu::KbRightMeta && Gosu::KbQ then close
     end
+
+    if button_down?(Gosu::KbLeftMeta) && button_down?(Gosu::KbQ) then close; end
+    if button_down?(Gosu::KbRightMeta) && button_down?(Gosu::KbQ) then close; end
 
     @direction = case key
                    when Gosu::KbRight then @direction == :left ? @direction : :right
