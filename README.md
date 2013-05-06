@@ -8,6 +8,15 @@ The classic snake-game running on Ruby using Gosu.
  - Fantastic growing snake
  - Apples to eat to your heart's content
 
+## Installation
+
+	$ gem install gosu
+	$ git clone https://github.com/jessc/rubysnake.git
+
+## Play
+
+	$ ruby rubysnake.rb
+
 ## Commands
 
  - Move: Arrow Keys
