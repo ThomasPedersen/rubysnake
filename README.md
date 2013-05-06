@@ -15,4 +15,4 @@ The classic snake-game running on Ruby using Gosu.
  - Quit: Escape or Command+Q
 
 ## Contributing
- - Fix bugs at bottom of snake.rb 
+ - Fix bugs at top of snake.rb

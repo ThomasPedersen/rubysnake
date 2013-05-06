@@ -18,6 +18,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see http://www.gnu.org/licenses/.
 
+=begin
+# Bug List / TODO:
+
+- if, for instance, the up and left keys are pushed quickly, the snake can
+  "run" on top of itself
+- show score
+- when paused the snake still accepts direction input
+- border does not have a displayed wall
+- sometimes the apple does not reappear when the game resets
+
+=end
+
 require 'gosu'
 require 'yaml'
 
@@ -163,13 +175,4 @@ class SnakeGame < Gosu::Window
 end
 
 SnakeGame.new.show
-
-
-# bugs:
-# - if, for instance, the up and left keys are pushed quickly, the snake can
-#   "run" on top of itself
-# - show score
-# - when paused the snake still accepts direction input
-# - border does not have a displayed wall
-# - sometimes the apple does not reappear when the game resets
 
